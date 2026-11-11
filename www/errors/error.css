@@ -1,0 +1,414 @@
+/* Global design variables for colors and themes */
+:root {
+	--bg-color: #f4f4f6;
+	--text-main: #2d3748;
+	--text-muted: #718096;
+	--accent-pink: #e6007e;
+	--panel-bg: #ffffff;
+	--carrot-orange: #ff8c42;
+	--carrot-green: #4caf50;
+	--ball-color: #ff6b6b;
+}
+
+/* Resets default margins and centers the card on the screen */
+body {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background-color: var(--bg-color);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Main white card container that holds the image and the text */
+.error-container {
+	width: 90%;
+	max-width: 850px;
+	background-color: var(--panel-bg);
+	border-radius: 24px;
+	box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+	overflow: hidden;
+	display: grid;
+	grid-template-columns: 1fr;
+}
+
+/* Switches to a two-column layout on desktops and tablets */
+@media (min-width: 768px) {
+	.error-container {
+		grid-template-columns: 1.2fr 1fr;
+	}
+}
+
+/* Left section area that centers the dog avatar and contains the carrots grid */
+.image-section {
+	background-color: #fdfaf6;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 40px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* Grid layout to distribute the custom CSS carrots evenly in the background */
+.carrot-grid {
+	position: absolute;
+	top: 0; left: 0; right: 0; bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	padding: 15px;
+	opacity: 0.25;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Individual wrapper that tilts each carrot to give it a playful look */
+.carrot-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(-15deg);
+	min-height: 35px;
+}
+
+/* Alternate rotation for every second carrot item to add variety */
+.carrot-item:nth-child(even) {
+	transform: rotate(25deg);
+}
+
+/* The green leaves of the carrot built with rounded borders */
+.carrot-leaves {
+	width: 14px;
+	height: 8px;
+	background-color: var(--carrot-green);
+	border-radius: 50% 50% 0 0;
+	display: block;
+}
+
+/* The carrot body sculpted into a cone shape using CSS clip-path */
+.carrot-body {
+	width: 0;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-top: 20px solid var(--carrot-orange) !important;
+	border-radius: 4px 4px 0 0;
+	display: block;
+	margin-top: -1px;
+}
+
+.ball-grid {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	padding: 15px;
+	opacity: 0.25;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Individual wrapper that slightly tilts each ball for a playful look */
+.ball-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(-15deg);
+	min-height: 24px;
+}
+
+/* Alternate rotation for every second ball item to add variety */
+.ball-item:nth-child(even) {
+	transform: rotate(20deg);
+}
+
+/* A tiny round ball created with soft edges */
+.ball {
+	width: 16px;
+	height: 16px;
+	background-color: var(--ball-color);
+	border-radius: 50%;
+	display: block;
+	position: relative;
+}
+
+/* Small highlight to give the ball a shiny appearance */
+.ball::after {
+	content: "";
+	width: 5px;
+	height: 5px;
+	background-color: rgba(255, 255, 255, 0.7);
+	border-radius: 50%;
+	position: absolute;
+	top: 3px;
+	left: 3px;
+}
+
+/* Grid for sleeping 501 page background */
+.sleep-grid {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	padding: 15px;
+	opacity: 0.2;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Individual wrapper that tilts each Z group */
+.sleep-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(-15deg);
+	min-height: 24px;
+	font-weight: 900;
+	font-size: 14px;
+	color: #a0aec0;
+}
+
+/* Grid for forbidden 403 page background */
+.forbidden-grid {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	padding: 15px;
+	opacity: 0.18;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Individual wrapper that rotates each symbol */
+.forbidden-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(-15deg);
+	min-height: 24px;
+}
+
+/* Alternate tilt */
+.forbidden-item:nth-child(even) {
+	transform: rotate(20deg);
+}
+
+/* The circle */
+.forbidden {
+	width: 14px;
+	height: 14px;
+	border: 2px solid #b62d34;
+	border-radius: 50%;
+	position: relative;
+}
+
+/* The diagonal slash */
+.forbidden::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 18px;
+	height: 2px;
+	background-color: #b62d34;
+	transform: translate(-50%, -50%) rotate(45deg);
+	border-radius: 2px;
+}
+
+/* Grid for 500 internal error background */
+.broken-grid {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-template-rows: repeat(5, 1fr);
+	padding: 15px;
+	opacity: 0.18;
+	pointer-events: none;
+	z-index: 1;
+}
+
+/* Individual wrapper with slight rotation variation */
+.broken-item {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transform: rotate(-15deg);
+	min-height: 24px;
+}
+
+/* Alternate tilt */
+.broken-item:nth-child(even) {
+	transform: rotate(20deg);
+}
+
+/* The broken square */
+.broken {
+	width: 14px;
+	height: 14px;
+	border: 2px solid #a0aec0;
+	border-radius: 3px;
+	position: relative;
+	overflow: hidden;
+}
+
+/* The crack line */
+.broken::after {
+	content: "";
+	position: absolute;
+	top: -2px;
+	left: 6px;
+	width: 2px;
+	height: 20px;
+	background: linear-gradient(
+		to bottom,
+		transparent 0%,
+		#a0aec0 20%,
+		#a0aec0 80%,
+		transparent 100%
+	);
+	transform: rotate(35deg);
+	opacity: 0.9;
+}
+
+/* Alternate rotation for variation */
+.sleep-item:nth-child(even) {
+	transform: rotate(20deg);
+}
+
+/* The "Z Z Z" symbol */
+.sleep {
+	display: flex;
+	gap: 2px;
+}
+
+.sleep span {
+	display: inline-block;
+}
+
+/* Position anchor for the dog photo and its mohawk effect */
+.avatar-wrapper {
+	position: relative;
+	width: 100%;
+	max-width: 280px;
+	z-index: 2;
+}
+
+/* Blurry orange-beige gradient simulating the dog's mohawk hair */
+.mohicano-effect {
+	position: absolute;
+	top: -25px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 50px;
+	height: 80px;
+	background: linear-gradient(to top, #d8c29b, rgba(216, 194, 155, 0));
+	border-radius: 50% 50% 0 0;
+	filter: blur(4px);
+	z-index: 1;
+}
+
+/* Styles the dog photo with smooth corners and a white frame */
+.pup-img {
+	width: 100%;
+	height: auto;
+	border-radius: 32px;
+	border: 8px solid var(--panel-bg);
+	box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+	display: block;
+	position: relative;
+	z-index: 2;
+}
+
+/* Right section box that aligns text and buttons vertically */
+.content-section {
+	padding: 40px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	position: relative;
+}
+
+/* Decorative pink bar at the bottom left, matching the original photo */
+.content-section::before {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 15px;
+	height: 100px;
+	background-color: var(--accent-pink);
+	border-radius: 0 4px 4px 0;
+}
+
+/* Large, bold typography for the 404 error code number */
+.error-code {
+	font-size: 4.5rem;
+	font-weight: 900;
+	color: var(--text-main);
+	margin: 0;
+	line-height: 1;
+	letter-spacing: -2px;
+}
+
+/* Main title styling for the "Page not found" message */
+h1 {
+	font-size: 1.75rem;
+	color: var(--text-main);
+	margin: 10px 0 20px 0;
+	font-weight: 700;
+}
+
+/* Gray, readable text styling for the explanation paragraph */
+p {
+	color: var(--text-muted);
+	line-height: 1.6;
+	margin: 0 0 30px 0;
+	font-size: 1rem;
+}
+
+/* Turns the home link into a modern dark button with hover transitions */
+.btn-home {
+	display: inline-block;
+	align-self: flex-start;
+	background-color: var(--text-main);
+	color: white;
+	text-decoration: none;
+	padding: 12px 28px;
+	border-radius: 12px;
+	font-weight: 600;
+	transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Smooth hover effect that darkens the button and shifts it up slightly */
+.btn-home:hover {
+	background-color: #1a202c;
+	transform: translateY(-1px);
+}
+
+/* Error background */
+.emoji-pattern {
+    font-size: 1.8rem;
+    user-select: none;
+    display: inline-block;
+}

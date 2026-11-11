@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Webserv </title>
+
+<link rel="icon" type="image/svg+xml" href="/favicon.ico">
+
+   
+
+<style>
+
+:root {
+
+/* Fun, Bold Typography Scale */
+
+--main-font-family: 'Montserrat', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+--font-size-base: 18px;
+
+--font-size-h1: 2.8rem;
+
+--font-size-h2: 1.6rem;
+
+--font-size-h3: 1.8rem;
+
+/* Universal Dark Mode Overwrite */
+
+--dark-mode-bg: #0f0f11;
+
+/* Dynamic Theme Backing States */
+
+--dynamic-bg-color: #2c3e50;
+
+--container-bg-color: rgba(15, 15, 20, 0.4);
+
+--card-bg-color: rgba(255, 255, 255, 0.07);
+
+--text-color-primary: #ffffff;
+
+--text-color-accent: #f1c40f;
+
+  
+
+/* Vibrant Button Palette */
+
+--btn-bg-standard: #ff6b6b;
+
+--btn-bg-hover: #ff4747;
+
+--btn-bg-alt: #48dbfb;
+
+--btn-bg-alt-hover: #0abde3;
+
+--btn-bg-error: #ee5253;
+
+--btn-bg-toggle: #1dd1a1;
+
+--btn-bg-toggle-hover: #10ac84;
+
+  
+
+/* Visual Layout Spacing macros */
+
+--container-max-width: 1400px;
+
+--card-border-radius: 16px;
+
+--card-padding: 26px;
+
+/* Distinct background for the persistent control sidebar wireframe */
+
+--sidebar-wireframe-bg: rgba(0, 0, 0, 0.45);
+
+}
+
+</style>
+
+  
+
+<style>
+
+body {
+
+font-family: var(--main-font-family);
+
+font-size: var(--font-size-base);
+
+background-color: var(--dynamic-bg-color);
+
+color: var(--text-color-primary);
+
+margin: 0;
+
+padding: 30px;
+
+transition: background-color 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+}
+
+  
+
+.container {
+
+max-width: var(--container-max-width);
+
+margin: 0 auto;
+
+background: var(--container-bg-color);
+
+padding: 40px;
+
+border-radius: calc(var(--card-border-radius) * 1.5);
+
+box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+
+backdrop-filter: blur(10px);
+
+border: 1px solid rgba(255, 255, 255, 0.08);
+
+}
+
+  
+
+/* Top Control Deck Frame */
+
+.top-bar {
+
+display: flex;
+
+justify-content: space-between;
+
+align-items: center;
+
+border-bottom: 2px dashed rgba(255, 255, 255, 0.15);
+
+padding-bottom: 25px;
+
+margin-bottom: 30px;
+
+}
+
+  
+
+.title-area h1 {
+
+margin: 0 0 8px 0;
+
+font-size: var(--font-size-h1);
+
+font-weight: 900;
+
+letter-spacing: -1px;
+
+background: linear-gradient(45deg, #ff6b6b, #f1c40f);
+
+-webkit-background-clip: text;
+
+-webkit-text-fill-color: transparent;
+
+}
+
+.server-info {
+
+font-weight: 700;
+
+color: var(--text-color-accent);
+
+font-size: 1.2rem;
+
+text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+
+}
+
+  
+
+.live-tracker {
+
+display: inline-block;
+
+background: rgba(0, 0, 0, 0.4);
+
+padding: 6px 14px;
+
+border-radius: 20px;
+
+font-family: monospace;
+
+font-size: 0.9rem;
+
+color: #48dbfb;
+
+border: 1px solid rgba(72, 219, 251, 0.2);
+
+margin-top: 10px;
+
+}
+
+  
+/*
+.visit-counter {
+
+display: inline-block;
+
+background: rgba(241, 196, 15, 0.15);
+
+padding: 6px 14px;
+
+border-radius: 20px;
+
+font-family: monospace;
+
+font-size: 0.9rem;
+
+color: #f1c40f;
+
+border: 1px solid rgba(241, 196, 15, 0.3);
+
+margin-top: 10px;
+
+margin-left: 10px;
+
+}*/
+
+  
+
+.btn-toggle {
+
+background: var(--btn-bg-toggle);
+
+margin: 0;
+
+font-size: 0.9rem;
+
+text-transform: uppercase;
+
+letter-spacing: 1px;
+
+padding: 14px 20px;
+
+border-radius: 30px;
+
+}
+
+.btn-toggle:hover { background: var(--btn-bg-toggle-hover); }
+
+  
+
+/* Two-column layout structure */
+
+.main-workspace {
+
+display: flex;
+
+gap: 30px;
+
+align-items: flex-start;
+
+}
+
+  
+
+/* Sidebar Wireframe styled with a unique backing background color to separate duties */
+
+.sidebar-wireframe {
+
+flex: 0 0 360px;
+
+background: var(--sidebar-wireframe-bg);
+
+padding: 20px;
+
+border-radius: var(--card-border-radius);
+
+border: 1px solid rgba(255, 255, 255, 0.05);
+
+box-shadow: inset 0 2px 10px rgba(0,0,0,0.5);
+
+display: flex;
+
+flex-direction: column;
+
+gap: 20px;
+
+position: sticky;
+
+top: 30px;
+
+}
+
+  
+
+.content-panel {
+
+flex: 1;
+
+}
+
+  
+
+.section-header {
+
+font-size: var(--font-size-h3);
+
+margin-top: 45px;
+
+margin-bottom: 20px;
+
+color: #f1c40f;
+
+text-align: center;
+
+font-weight: 800;
+
+text-transform: uppercase;
+
+letter-spacing: 1px;
+
+position: relative;
+
+padding-bottom: 10px;
+
+}
+
+.section-header::after {
+
+content: '';
+
+position: absolute;
+
+bottom: 0;
+
+left: 50%;
+
+transform: translateX(-50%);
+
+width: 80px;
+
+height: 4px;
+
+background: #ff6b6b;
+
+border-radius: 2px;
+
+}
+
+  
+
+/* Architectural structural layout for rows inside the grid block */
+
+.horizontal-row-deck {
+
+display: grid;
+
+grid-template-columns: repeat(3, 1fr);
+
+gap: 20px;
+
+}
+
+  
+
+/* Image-Inspired Row Grid Layout for the Error Simulation System */
+
+.error-grid-row {
+
+display: grid;
+
+grid-template-columns: repeat(3, 1fr);
+
+gap: 30px;
+
+margin-top: 20px;
+
+}
+
+  
+
+.card {
+
+background: var(--card-bg-color);
+
+padding: var(--card-padding);
+
+border-radius: var(--card-border-radius);
+
+border: 1px solid rgba(255, 255, 255, 0.08);
+
+display: flex;
+
+flex-direction: column;
+
+justify-content: space-between;
+
+transform: translateY(0);
+
+transition: transform 0.2s, box-shadow 0.2s;
+
+}
+
+/* HOVER CONTROL: to excluve inactive cards (.is-offline) */
+
+.card:hover:not([style*="not-allowed"]):not(.error-list-item):not(.is-offline) {
+
+transform: translateY(-4px);
+
+box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+
+border-color: rgba(255,255,255,0.15);
+
+}
+
+  
+
+/* Fixed helper selector pattern for inactive items */
+
+.is-offline {
+
+opacity: 0.40 !important;
+
+pointer-events: none !important;
+
+cursor: not-allowed !important;
+
+}
+
+/* Force every child element within the inactive card to inherit the lock cursor */
+
+.is-offline *, .is-offline input, .is-offline button {
+
+cursor: not-allowed !important;
+
+}
+
+  
+
+/* Custom styling for image */
+
+.error-list-item {
+
+background: var(--card-bg-color);
+
+padding: 24px;
+
+border-radius: var(--card-border-radius);
+
+border: 1px solid rgba(255, 255, 255, 0.08);
+
+display: flex;
+
+flex-direction: column;
+
+text-decoration: none;
+
+color: inherit;
+
+transition: border-color 0.2s, transform 0.2s;
+
+}
+
+.error-list-item:hover {
+
+border-color: var(--btn-bg-error);
+
+transform: translateY(-3px);
+
+box-shadow: 0 6px 15px rgba(238, 82, 83, 0.15);
+
+}
+
+.error-number-badge {
+
+font-size: 1.8rem;
+
+font-weight: 900;
+
+color: #a29bfe;
+
+margin-bottom: 10px;
+
+}
+
+.error-title-link {
+
+font-size: 1.2rem;
+
+font-weight: 700;
+
+color: #ffffff;
+
+margin-bottom: 8px;
+
+text-decoration: underline;
+
+text-decoration-color: rgba(255,255,255,0.2);
+
+}
+
+.error-list-item p {
+
+margin: 0;
+
+font-size: 0.9rem;
+
+color: rgba(255,255,255,0.6);
+
+line-height: 1.4;
+
+}
+
+  
+
+.privacy-notice {
+
+font-size: 0.75rem;
+
+color: rgba(255, 255, 255, 0.5);
+
+font-style: italic;
+
+margin-top: 10px;
+
+display: block;
+
+line-height: 1.3;
+
+}
+
+  
+
+.card h2 {
+
+margin-top: 0;
+
+font-size: var(--font-size-h2);
+
+font-weight: 700;
+
+letter-spacing: -0.5px;
+
+color: #fff;
+
+margin-bottom: 12px;
+
+}
+
+  
+
+.card p {
+
+margin-top: 0;
+
+color: rgba(255,255,255,0.8);
+
+font-size: 1rem;
+
+line-height: 1.5;
+
+margin-bottom: 20px;
+
+}
+
+  
+
+/* Interactive Element Architecture */
+
+a.btn, button, input[type="submit"] {
+
+display: inline-block;
+
+width: 100%;
+
+padding: 14px;
+
+margin: 8px 0;
+
+background: var(--btn-bg-standard);
+
+color: white;
+
+text-decoration: none;
+
+border-radius: 8px;
+
+text-align: center;
+
+font-weight: 800;
+
+border: none;
+
+cursor: pointer;
+
+box-sizing: border-box;
+
+font-size: 1rem;
+
+transition: background 0.2s, transform 0.1s;
+
+box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+
+}
+
+  
+
+a.btn:hover, button:hover { background: var(--btn-bg-hover); }
+
+a.btn:active, button:active { transform: scale(0.97); }
+
+.btn-alt { background: var(--btn-bg-alt); color: #1e272e; }
+
+.btn-alt:hover { background: var(--btn-bg-alt-hover); color: white; }
+
+  
+
+.btn-error { background: var(--btn-bg-error); }
+
+.btn-error:hover { background: rgba(238, 82, 82, 0.9); }
+
+  
+
+input[type="file"], input[type="text"] {
+
+width: 100%;
+
+padding: 12px;
+
+margin: 10px 0;
+
+border-radius: 6px;
+
+border: 2px solid rgba(255,255,255,0.1);
+
+box-sizing: border-box;
+
+background: rgba(255,255,255,0.95);
+
+color: #111;
+
+font-weight: 600;
+
+font-size: 0.95rem;
+
+}
+
+.status-box {
+
+font-size: 0.85rem;
+
+margin-top: 10px;
+
+color: #1dd1a1;
+
+font-family: 'Courier New', Courier, monospace;
+
+background: rgba(0,0,0,0.4);
+
+padding: 10px;
+
+border-radius: 6px;
+
+min-height: 20px;
+
+word-break: break-all;
+
+border: 1px solid rgba(29, 209, 161, 0.2);
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+  
+
+<div class="container">
+
+<div class="top-bar">
+
+<div class="title-area">
+
+<h1>Webserv</h1>
+
+<div id="server-tag" class="server-info">Scanning connection port...</div>
+
+<div class="live-tracker">📍 Active URL Path: <span id="current-path-tracker">/</span></div>
+
+<!--<div class="visit-counter">🍪 Cookie Visits: <span id="cookie-visit-count">1</span></div>-->
+
+</div>
+
+<div class="theme-toggle-container">
+
+<button id="theme-button" class="btn-toggle" onclick="toggleThemeMode()">🌓 Switch to Dark Mode</button>
+
+</div>
+
+</div>
+
+  
+
+<div class="main-workspace" style="display: flex; gap: 20px; align-items: flex-start;">
+
+  
+
+<div class="sidebar-wireframe" style="flex: 0 0 320px; display: flex; flex-direction: column; gap: 20px;">
+
+<!--<div class="card is-offline" style="background: transparent; border: none; padding: 0; margin: 0;">-->
+<div class="card" style="transform: none !important; transition: none !important;">
+
+<div>
+
+<h2>Form </h2>
+
+<p>Test POST with this form made for you. Create a document easily. </p>
+
+</div>
+
+<form id="sidebar-post-form" onsubmit="triggerAsyncPost(event)">
+
+<!--<input type="text" id="post-key-name" placeholder="Enter key name..." required disabled>-->
+<input type="text" id="post-key-name" placeholder="Enter a file name..." required>
+
+<!--<input type="text" id="post-payload" placeholder="Enter text payload..." required disabled>-->
+<input type="text" id="post-payload" placeholder="Enter a content..." required>
+
+<!--<button type="submit" style="background: #34495e;" disabled>Send</button>-->
+<button type="submit" style="background: #34495e;" >Send</button>
+
+</form>
+
+<span class="privacy-notice">*Check how it looks in the terminal </span>
+
+<div id="post-status-display" class="status-box">Status code output idle...</div>
+
+</div>
+
+  
+
+<hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.15); margin: 0;">
+
+  
+
+<div class="card" style="margin: 0; width: 100%; box-sizing: border-box; transform: none !important; transition: none !important; top: 0 !important;">
+
+<div>
+
+<h2>📦 File Manager</h2>
+
+<p>Upload files, see listed the files you upload with the autoindex or delete the selected one.</p>
+
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 15px;">
+
+<div style="position: relative; display: flex; align-items: center; height: 48px; background: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); border-radius: 6px; overflow: hidden; transition: all 0.2s;"
+
+onmouseover="this.style.borderColor='var(--dynamic-bg-color)'; this.style.background='rgba(255,255,255,0.08)';"
+
+onmouseout="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.background='rgba(255,255,255,0.05)';">
+
+<input type="file" id="file-payload-input" onchange="updateFileLabelName()"
+
+style="position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 5;">
+
+<div id="file-custom-label" style="display: flex; align-items: center; justify-content: space-between; width: 100%; padding: 0 15px; user-select: none; box-sizing: border-box;">
+
+<span style="color: #aaa; font-size: 0.95rem;">No file selected...</span>
+
+<span style="background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">Browse File</span>
+
+</div>
+
+</div>
+
+  
+
+<div style="display: flex; flex-direction: column; gap: 8px;">
+
+<button onclick="triggerAsyncUpload(event)" class="btn" style="margin:0; background: #27ae60; width: 100%;">Upload files</button>
+
+<div style="display: flex; gap: 8px;">
+
+<a href="/uploads/" target="_blank" class="btn" style="margin:0; flex: 1; background: #2980b9; text-align: center; text-decoration: none; line-height: 24px; color: white;">View</a>
+
+<button onclick="triggerDeleteRequest()" class="btn" style="margin:0; flex: 1; background: #c0392b;">Delete</button>
+
+</div>
+
+</div>
+
+  
+
+<div id="upload-status-display" class="status-box" style="margin: 0;">File system monitor idle...</div>
+
+</div>
+
+</div>
+
+  
+
+</div>
+
+  
+
+<div class="content-panel" style="flex: 1;">
+
+<div class="horizontal-row-deck">
+
+  
+
+<div class="card">
+
+<div>
+
+<h2>GET</h2>
+
+<p>Type any path set in the config file to serve the file or trigger errors.</p>
+
+</div>
+
+<div>
+
+<div style="position: relative; display: flex; align-items: center; margin-bottom: 15px;">
+
+<span onclick="navigateToRouteManually()"
+
+title="Open route in browser tab"
+
+style="position: absolute; left: 15px; font-size: 1.25rem; cursor: pointer; user-select: none; transition: all 0.2s ease; opacity: 0.7; z-index: 10;"
+
+onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)';"
+
+onmouseout="this.style.opacity='0.7'; this.style.transform='scale(1)';">
+
+🌐
+
+</span>
+
+<input type="text" id="custom-curl-path" placeholder="e.g. /about.html, /list, /test"
+
+style="margin: 0; width: 100%; padding-left: 45px; padding-right: 15px;">
+
+</div>
+
+  
+
+<button onclick="testRouteAsynchronously()" class="btn" style="margin-top: 15px;">I want it now</button>
+
+<div id="get-status-display" class="status-box">Status monitor idle...</div>
+
+</div>
+
+</div>
+
+  
+
+<div class="card">
+<div>
+    <h2>CGI</h2>
+	<p>Let's try dynamic tests with GET and POST.</p>
+</div>
+<div style="display: flex; flex-direction: column; gap: 15px;">
+
+	<a href="/cgi-bin/today.py" class="btn" style="margin: 0; background: var(--btn-bg-toggle); text-decoration: none; display: block; box-sizing: border-box;">
+		What day is today?
+	</a>
+
+	<hr style="border: 0; border-top: 1px dashed rgba(255,255,255,0.15); margin: 5px 0;">
+
+	<form id="cgi-hello-form" action="/cgi-bin/hello_you.sh" method="POST" style="display: flex; flex-direction: column; gap: 10px; margin: 0;">
+		<div style="display: flex; gap: 8px;">
+			<input type="text" id="hello-username" name="username" placeholder="Enter your name..." required 
+					style="margin: 0; padding: 10px; border-radius: 6px; background: rgba(255,255,255,0.9); color: #111; border: none; flex: 1; font-weight: bold; width: 100%;">
+		</div>
+		<button type="submit" style="margin: 0; background: var(--btn-bg-standard); width: 100%;">
+			Say Hello!
+		</button>
+	</form>
+
+</div>
+</div>
+  
+
+<!--<div class="card is-offline">-->
+<div class="card">
+	<div>
+		<h2>Redirection </h2>
+		<p>Explore how the redirections can be internal or external.</p>
+	</div>
+	<div style="display: flex; flex-direction: column; gap: 10px;">
+		
+		<button onclick="interceptRedirect('/search')" class="btn" style="margin:0; background: var(--btn-bg-toggle);">
+			Search
+		</button>
+		
+		<button onclick="interceptRedirect('/new-about')" class="btn" style="margin:0;">
+			About
+		</button>
+		
+		<div id="redirect-status-display" class="status-box">Ready to redirect...</div>
+	</div>
+</div>
+
+  
+
+</div>
+
+  
+
+<div class="section-header">Error Codes</div>
+
+  
+
+<div class="error-grid-row">
+
+<a href="/errors/HTML/400.html" class="error-list-item">
+
+<div class="error-number-badge">400</div>
+
+<div class="error-title-link">Bad Request</div>
+
+<p>Simulate a malformed request frame parsing syntax failure.</p>
+
+</a>
+
+  
+
+<a href="/errors/HTML/403.html" class="error-list-item">
+
+<div class="error-number-badge">403</div>
+
+<div class="error-title-link">Forbidden</div>
+
+<p>Access secure local zones protected by server rule restrictions.</p>
+
+</a>
+
+  
+
+<a href="/errors/HTML/404.html" class="error-list-item">
+
+<div class="error-number-badge">404</div>
+
+<div class="error-title-link">Not Found</div>
+
+<p>Simulate a malformed request frame or a syntax parsing failure.</p>
+
+</a>
+
+  
+
+<a href="/errors/HTML/405.html" class="error-list-item">
+
+<div class="error-number-badge">405</div>
+
+<div class="error-title-link">Method Not Allowed</div>
+
+<p>Send a request method (like POST) to a route that restricts it.</p>
+
+</a>
+
+  
+
+<a href="/errors/HTML/413.html" class="error-list-item">
+
+<div class="error-number-badge">413</div>
+
+<div class="error-title-link">Payload Too Large</div>
+
+<p>Exceed your configured client_max_body_size.</p>
+
+</a>
+
+  
+
+<a href="/errors/HTML/415.html" class="error-list-item">
+
+<div class="error-number-badge">415</div>
+
+<div class="error-title-link">Unsupported Media Type</div>
+
+<p>Send a POST request with an unsupported Content-Type header.</p>
+
+</a>
+
+
+<a href="/errors/HTML/500.html" class="error-list-item">
+
+<div class="error-number-badge">500</div>
+
+<div class="error-title-link">Internal Error</div>
+
+<p>Simulate unexpected CGI background sub-process crash loops.</p>
+
+</a>
+
+<a href="/errors/HTML/501.html" class="error-list-item">
+
+<div class="error-number-badge">501</div>
+
+<div class="error-title-link">Not Implemented</div>
+
+<p>Requests an unimplemented HTTP method like PUT or PATCH</p>
+
+</a>
+<a href="/errors/HTML/505.html" class="error-list-item">
+
+<div class="error-number-badge">505</div>
+
+<div class="error-title-link">Version Not Supported</div>
+
+<p>Triggered by sending a request using a version other than HTTP/1.1</p>
+
+</a>
+
+</div>
+
+  
+
+<script>
+
+const currentPort = window.location.port;
+
+const documentRoot = document.documentElement;
+
+const textLabelElement = document.getElementById('server-tag');
+
+const themeButton = document.getElementById('theme-button');
+
+const pathTrackerField = document.getElementById('current-path-tracker');
+
+let vibrantColorMacro = '#2c3e50';
+
+let isDarkModeActive = false;
+
+  
+
+pathTrackerField.innerText = window.location.pathname + window.location.search;
+
+  
+if (currentPort === "8080") {
+
+vibrantColorMacro = '#2980b9'; // Blue
+
+textLabelElement.innerText = `🚀 MAIN SERVER on Port ${currentPort}`;
+
+}
+
+else if (currentPort === "8081") {
+
+vibrantColorMacro = '#8e44ad'; // Purple
+
+textLabelElement.innerText = `🚀 MAIN SERVER on Port ${currentPort}`;
+
+}
+
+else if (currentPort === "9080") {
+
+vibrantColorMacro = '#10ac84'; // Green
+
+textLabelElement.innerText = `🔌 SERVER 1 on Port ${currentPort}`;
+
+}
+
+else if (currentPort === "9090" || currentPort === "9092") {
+
+vibrantColorMacro = '#d35400'; // Orange
+
+textLabelElement.innerText = `🔥 SERVER 2 on Port ${currentPort}`;
+
+}
+
+else if (currentPort === "7080") {
+
+vibrantColorMacro = '#154464'; // Darker Blue
+
+textLabelElement.innerText = `🗑️ SERVER 3 on Port ${currentPort}`;
+
+}
+
+else if (currentPort === "6080") {
+
+vibrantColorMacro = '#27ae60'; // Dark green
+
+textLabelElement.innerText = `🛡️ SERVER 4 on Port ${currentPort}`;
+
+}
+
+else {
+
+vibrantColorMacro = '#2c3e50';
+
+textLabelElement.innerText = `🔌 Server on Port ${currentPort || '80'}`;
+
+}
+
+  
+
+updateDisplayTheme();
+
+  
+
+function toggleThemeMode() {
+
+isDarkModeActive = !isDarkModeActive;
+
+updateDisplayTheme();
+
+}
+
+  
+
+function updateDisplayTheme() {
+
+if (isDarkModeActive) {
+
+const darkColor = getComputedStyle(documentRoot).getPropertyValue('--dark-mode-bg').trim();
+
+documentRoot.style.setProperty('--dynamic-bg-color', darkColor);
+
+themeButton.innerText = "🌈 Vibrant Mode";
+
+} else {
+
+documentRoot.style.setProperty('--dynamic-bg-color', vibrantColorMacro);
+
+themeButton.innerText = "🌓 Dark Mode";
+
+}
+
+}
+
+  
+
+//GET (Button)
+function testRouteAsynchronously() {
+
+const inputPath = document.getElementById('custom-curl-path').value.trim();
+
+const outputField = document.getElementById('get-status-display');
+
+if (!inputPath) {
+
+outputField.innerText = "⚠️ Type a path";
+
+return;
+
+}
+
+outputField.innerText = `Testing route: ${inputPath}...`;
+
+fetch(inputPath)
+
+.then(res => {
+
+outputField.innerText = `HTTP Status Code:\n ${res.status} ${res.statusText}\nContent-Type: ${res.headers.get('content-type') || 'Not Set'}`;
+
+})
+
+.catch(err => {
+
+outputField.innerText = `[NETWORK ERROR] Could not reach endpoint: ${err}`;
+
+});
+
+}
+
+  
+
+// GET (icon)
+function navigateToRouteManually() {
+
+const inputPath = document.getElementById('custom-curl-path').value.trim();
+
+if (!inputPath) {
+
+window.location.href = "/errors/HTML/404.html"; // default behaviour
+
+return;
+
+}
+
+window.location.href = inputPath;
+
+}
+
+  
+
+// FORM (POST)
+function triggerAsyncPost(event) {
+
+	event.preventDefault();
+
+	const fileName = document.getElementById('post-key-name').value.trim();
+	const fileContent = document.getElementById('post-payload').value;
+	const output = document.getElementById('post-status-display');
+
+	if (!fileName) {
+		output.innerText = "⚠️ Enter a file name";
+		return;
+	}
+
+	output.innerText = "Creating file ...";
+
+	fetch('/uploads/' + fileName,{
+			method: 'POST',
+			headers: { 'Content-Type': 'text/plain' },
+			body: fileContent
+		})
+	.then(res => {
+			output.innerText = `[POST] Status: ${res.status} (${res.status === 201 ? 'File Created' : 'Error'})`;
+	})
+	.catch(err => output.innerText = `[ERR] ${err}`);
+}
+
+  
+// FILE MANAGER (POST)
+function triggerAsyncUpload(event) {
+
+	event.preventDefault();
+
+	const fileInput = document.getElementById('file-payload-input');
+	const output = document.getElementById('upload-status-display');
+
+	if (fileInput.files.length === 0) {
+		output.innerText = "⚠️ Select a file first";
+		return;
+	}
+
+	const file = fileInput.files[0];
+
+	output.innerText = "Uploading file...";
+
+	// Upload
+	fetch('/uploads/' + file.name, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/octet-stream' },
+		body: file
+	})
+	.then(res => {
+		output.innerText = `[UPLOAD] Status: ${res.status} (${res.status === 201 ? 'Success' : 'Failed'})`;
+	})
+	.catch(err => output.innerText = `[ERR] ${err}`);
+}
+
+  
+
+// FILE MANAGER (DELETE)
+function triggerDeleteRequest() {
+	const fileInput = document.getElementById('file-payload-input');
+	const output = document.getElementById('upload-status-display');
+
+	if (fileInput.files.length === 0) {
+		output.innerText = "⚠️ Select a file to delete";
+		return;
+	}
+
+	const fileName = fileInput.files[0].name;
+	output.innerText = `Deleting ${fileName}...`;
+
+	fetch('/uploads/' + fileName, {
+		method: 'DELETE'
+	})
+	.then(res => {
+		output.innerText = `[DELETE] Status: ${res.status} (${res.status === 204 ? 'Deleted' : 'Error'})`;
+	})
+	.catch(err => output.innerText = `[ERR] ${err}`);
+}
+
+
+function updateFileLabelName() {
+
+const input = document.getElementById('file-payload-input');
+
+const label = document.getElementById('file-custom-label');
+
+  
+
+if (input.files.length > 0) {
+
+  
+
+const fileName = input.files[0].name;
+
+  
+
+label.innerHTML = `
+
+<span style="color: #fff; font-size: 0.95rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;" title="${fileName}">
+
+✔️ ${fileName}
+
+</span>
+
+<span style="background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold; color: #fff;">
+
+Change
+
+</span>`;
+
+} else {
+
+label.innerHTML = `
+
+<span style="color: #aaa; font-size: 0.95rem;">📄 No file selected...</span>
+
+<span style="background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 4px; font-size: 0.85rem; font-weight: bold;">
+
+Browse File
+
+</span>`;
+
+}
+
+}
+
+function interceptRedirect(targetPath) {
+	const output = document.getElementById('redirect-status-display');
+	output.innerText =
+		"Connecting ...";
+
+	setTimeout(() => {
+			window.location.href = targetPath;
+		}, 1500);
+}
+  
+
+</script>
+
+</body>
+
+</html>
